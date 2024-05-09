@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/horario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Horario"
+        android:icon="@drawable/calendario"/>
+    <item
+        android:id="@+id/rutinas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Rutinas"
+        android:icon="@drawable/tabla"/>
+    <item
+        android:id="@+id/ejercicios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Ejercicios"
+        android:icon="@drawable/ejercicios"/>
+    <item
+        android:id="@+id/ajustes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Ajustes"
+        android:icon="@drawable/ajustes"/>
+</menu>
