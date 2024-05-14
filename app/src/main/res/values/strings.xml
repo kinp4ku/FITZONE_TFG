@@ -38,5 +38,5 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-/*    <string name="default_web_client_id">AIzaSyCyniHoztDZ-5QDMk9lFpybX0vlX7slEZ4</string>*/
+    /*    <string name="default_web_client_id">AIzaSyCyniHoztDZ-5QDMk9lFpybX0vlX7slEZ4</string>*/
 </resources>

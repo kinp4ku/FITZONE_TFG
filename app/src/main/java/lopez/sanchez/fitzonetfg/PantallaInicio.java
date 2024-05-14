@@ -38,7 +38,7 @@ public class PantallaInicio extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.ejercicios) {
                     fragment = new EjerciciosFragment();
                 } else if (item.getItemId() == R.id.ajustes) {
-                    //fragment = new AjustesFragment();
+                   fragment = new AjustesFragment();
                 }
 
                 if (fragment != null) {

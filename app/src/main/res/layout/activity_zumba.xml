@@ -6,4 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".Zumba">
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="184dp"
+        android:layout_height="82dp"
+        android:text="SIGUIENTE"
+        tools:layout_editor_absoluteX="123dp"
+        tools:layout_editor_absoluteY="262dp" />
+
+    <Button
+
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/boton_redondo"
+        android:text="Button"
+        android:textColor="#E60F0F"
+        tools:layout_editor_absoluteX="136dp"
+        tools:layout_editor_absoluteY="130dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
