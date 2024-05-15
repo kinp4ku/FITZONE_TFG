@@ -1,6 +1,7 @@
 package lopez.sanchez.fitzonetfg;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -19,20 +20,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.android.gms.tasks.OnCompleteListener;
 
 public class Registarse extends AppCompatActivity {
 
@@ -84,7 +85,7 @@ public class Registarse extends AppCompatActivity {
 
         google.setOnClickListener(v -> googleSignIn());
 
-        registrarse.setOnClickListener(v -> guardarDatos());
+     //   registrarse.setOnClickListener(v -> guardarDatos());
     }
 
     private void openGallery() {
@@ -202,4 +203,32 @@ public class Registarse extends AppCompatActivity {
                 });
     }
 
+    public void setSign(View v) {
+        guardarDatos();
+        if (!correo.getText().toString().isEmpty() && !contraseña.getText().toString().isEmpty()) {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contraseña.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        pantallaInicio();
+                    } else {
+                        showAlert();
+                    }
+                }
+            });
+        }
+
+    }
+
+    public void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage("Error de autentificación.");
+        builder.setPositiveButton("Aceptar", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
+

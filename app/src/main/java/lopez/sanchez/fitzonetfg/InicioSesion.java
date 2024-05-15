@@ -1,8 +1,5 @@
 package lopez.sanchez.fitzonetfg;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,153 +8,118 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.BaseInputConnection;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-
-/*
-enum class ProviderType{
-    BASIC,
-    GOOGLE
-}*/
 public class InicioSesion extends AppCompatActivity {
-    EditText contraseña;
-    EditText correo ;
-    FirebaseAuth mAuth;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Context contexto;
+    private EditText contra, email;
+    private Button login;
+    private CheckBox cb;
+    private TextView titulo;
+
+    private static String PREFS_KEY = "ficheroPreferencias";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_inicio_sesion);
-      /*  //FireBase:
-        FirebaseAnalytics analytics = FirebaseAnalytics.getInstance(this);
-        Bundle bundle = new Bundle();
-        bundle.putString("message", "Integracion de Firebase completa");
-        analytics.logEvent("InitScreen", bundle);
+        contexto = this;
 
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        // Setup
-         bundle = getIntent().getExtras();
-        String email = (bundle != null) ? bundle.getString("email") : null;
-        String provider = (bundle != null) ? bundle.getString("provider") : null;
-        setup(email != null ? email : "", provider != null ? provider : "");
+        // Inicializar vistas
+        login = findViewById(R.id.loginButton);
+        email = findViewById(R.id.ETTextEmail);
+        contra = findViewById(R.id.ETTextPassword);
+        cb = findViewById(R.id.cbMantener);
+        titulo = findViewById(R.id.txt_inicioSesion);
 
-        //GUARDADO DE DATOS:
-        SharedPreferences prefs = getSharedPreferences("UsuariosFitZone", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("email", email);
-        editor.putString("contraseña", provider);
-        editor.apply();
-
-
-
-        */
-
-mAuth = FirebaseAuth.getInstance();
-        //creo nimaciones para dar la transición de inicio de sesión
+        // Configurar animaciones
         Animation animacionArriba = AnimationUtils.loadAnimation(this, R.anim.arriba);
         Animation trans = AnimationUtils.loadAnimation(this, R.anim.transparencia);
         ImageView circulo = findViewById(R.id.circulo);
         ImageView circulito = findViewById(R.id.circulito);
-        contraseña = findViewById(R.id.txt_contraseña);
-        correo = findViewById(R.id.txt_gmail);
-        Button logIn = findViewById(R.id.btn_entrar);
         circulo.setAnimation(animacionArriba);
         circulito.setAnimation(trans);
 
-       // circulito.setAnimation(trans);
-        correo.setVisibility(View.INVISIBLE);
-        contraseña.setVisibility(View.INVISIBLE);
+        // Ocultar elementos
+        email.setVisibility(View.INVISIBLE);
+        contra.setVisibility(View.INVISIBLE);
         circulito.setVisibility(View.INVISIBLE);
-        logIn.setVisibility(View.INVISIBLE);
+        login.setVisibility(View.INVISIBLE);
+        titulo.setVisibility(View.INVISIBLE);
+
         // Esperar 2 segundos antes de mostrar los elementos
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Mostrar los elementos después de 2 segundos
-                correo.setVisibility(View.VISIBLE);
-                contraseña.setVisibility(View.VISIBLE);
+                email.setVisibility(View.VISIBLE);
+                contra.setVisibility(View.VISIBLE);
                 circulito.setVisibility(View.VISIBLE);
-                logIn.setVisibility(View.VISIBLE);
-                //se debería de poner una transición para que saliera la img para iniciar sesión
+                login.setVisibility(View.VISIBLE);
+                titulo.setVisibility(View.VISIBLE);
             }
         }, 2000); // 2000 milisegundos = 2 segundos
-
     }
 
+    public void setLogin(View v) {
+        String emailText = email.getText().toString();
+        String passwordText = contra.getText().toString();
 
-    /*
-    private void setup(String email, String provider) {
-       // title = "Inicio";
-        correo.setText(email);
-        contraseña.setText(provider);
-        /*logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences(UsuariosFitZone, Context.MODE_PRIVATE);
-                prefs.edit().clear().apply();
-                FirebaseAuth.getInstance().signOut();
-                onBackPressed();
-            }
-        });*/
-    //}
+        if (!emailText.isEmpty() && !passwordText.isEmpty()) {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailText, passwordText)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(InicioSesion.this, PantallaInicio.class);
+                                intent.putExtra("email", emailText);
+                                startActivity(intent);
 
-    public void EntradaApp(View v){
-        // Código para abrir la otra actividad
-        Intent intent = new Intent(this, PantallaInicio.class);
-        startActivity(intent);
-    }
-
-    public void logIn(View v){
-        String emailUser = correo.getText().toString().trim();
-        String passUser = contraseña.getText().toString().trim();
-
-        if(emailUser.isEmpty() && passUser.isEmpty()){
-            Toast.makeText(this, "Rellenar datos", Toast.LENGTH_SHORT).show();
-        }else{
-            loginUser(emailUser, passUser);
+                                if (cb.isChecked()) {
+                                    guardarValor(contexto, "mail", emailText);
+                                    guardarValor(contexto, "pass", passwordText);
+                                } else {
+                                    guardarValor(contexto, "mail", "");
+                                    guardarValor(contexto, "pass", "");
+                                }
+                            } else {
+                                showAlert();
+                            }
+                        }
+                    });
         }
     }
 
-    private void loginUser(String emailUser, String passUser) {
+    private void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error");
+        builder.setMessage("Error de autentificación.");
+        builder.setPositiveButton("Aceptar", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
-        mAuth.signInWithEmailAndPassword(emailUser, passUser).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                   startActivity(new Intent(InicioSesion.this, PantallaInicio.class));
-                    Toast.makeText(InicioSesion.this, "Bienvenido", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(InicioSesion.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(InicioSesion.this, "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private static void guardarValor(Context context, String keyPref, String valor) {
+        SharedPreferences acceso = context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE);
+        SharedPreferences.Editor editor = acceso.edit();
+        editor.putString(keyPref, valor);
+        editor.apply(); // Usar apply() en lugar de commit()
     }
 }
-
-
-
-
-
-
-
-
-
-
