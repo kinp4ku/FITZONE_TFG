@@ -8,7 +8,8 @@
     <!-- ScrollView para permitir desplazamiento vertical -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/fondomorado">
 
         <!-- LinearLayout vertical para organizar elementos -->
         <LinearLayout
@@ -26,20 +27,22 @@
                     android:id="@+id/textViewPerfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PERFIL"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginEnd="8dp" />
+                    android:layout_marginEnd="8dp"
+                    android:text="PERFIL"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textViewNombreUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nombre de Usuario"
                     android:layout_below="@id/textViewPerfil"
                     android:layout_alignParentStart="true"
+                    android:text="Nombre de Usuario"
+                    android:textColor="@color/white"
                     android:textSize="18sp" />
 
             </RelativeLayout>
@@ -52,54 +55,20 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
-                    android:id="@+id/btnCambiarContraseña"
+                <ImageView
+                    android:id="@+id/btnContraseña"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="Cambiar Contraseña"
-                    android:onClick="mostrarOcultarCambiarContraseña"
-                    android:src="@drawable/ojo" />
+                    android:contentDescription="Contraseña"
+                    android:src="@drawable/twotone_password_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Cambiar Contraseña"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <!-- Contenedor para EditText de Cambiar Contraseña (inicialmente oculto) -->
-            <LinearLayout
-                android:id="@+id/layoutEditarContraseña"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_marginTop="16dp">
-
-                <!-- EditText para ingresar nueva contraseña -->
-                <EditText
-                    android:id="@+id/editTextNuevaContraseña"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nueva Contraseña"
-                    android:inputType="textPassword" />
-
-                <!-- EditText para confirmar nueva contraseña -->
-                <EditText
-                    android:id="@+id/editTextConfirmarContraseña"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Confirmar Contraseña"
-                    android:inputType="textPassword" />
-
-                <!-- Button para guardar la nueva contraseña -->
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guardar Contraseña"
-                    android:onClick="guardarContraseña" />
 
             </LinearLayout>
 
@@ -111,28 +80,20 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/btnEditarTelefono"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Editar Número de Teléfono"
-                    android:onClick="mostrarOcultarEditarTelefono"
-                    android:src="@drawable/ojo" />
+                    android:src="@android:drawable/ic_menu_call" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Editar Número de Teléfono"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
-
-                <!-- EditText para ingresar número de teléfono (inicialmente oculto) -->
-                <EditText
-                    android:id="@+id/editTextTelefono"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Número de Teléfono"
-                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -144,59 +105,20 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/btnEditarUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Editar Datos del Usuario"
-                    android:onClick="mostrarOcultarEditarUsuario"
-                    android:src="@drawable/ojo" />
+                    android:src="@android:drawable/ic_menu_edit" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Editar Datos del Usuario"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <!-- Contenedor para EditText de Datos del Usuario (inicialmente oculto) -->
-            <LinearLayout
-                android:id="@+id/layoutEditarUsuario"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_marginTop="16dp">
-
-                <!-- EditText para ingresar nombre -->
-                <EditText
-                    android:id="@+id/editTextNombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nombre" />
-
-                <!-- EditText para ingresar apellido -->
-                <EditText
-                    android:id="@+id/editTextApellido"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Apellido" />
-
-                <!-- EditText para ingresar DNI -->
-                <EditText
-                    android:id="@+id/editTextDNI"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="DNI" />
-
-                <!-- Button para guardar los datos del usuario -->
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guardar"
-                    android:onClick="guardarDatosUsuario" />
 
             </LinearLayout>
 
@@ -207,19 +129,19 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/btnDesconectarse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="Desconectarse"
-                    android:onClick="desconectarse"
-                    android:src="@drawable/ojo" />
+                    android:src="@drawable/baseline_exit_to_app_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Desconectarse"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
 
             </LinearLayout>

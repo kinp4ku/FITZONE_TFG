@@ -70,4 +70,11 @@ dependencies {
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+    //para las img de firebase
+    implementation ("com.squareup.picasso:picasso:2.71828")
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
 }

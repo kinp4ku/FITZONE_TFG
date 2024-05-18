@@ -33,24 +33,26 @@
             <TextView
                 android:id="@+id/nombreEjercicio"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:text="Lunges"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Trabajo"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:text="Cuádriceps"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/Repeticiones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="2x3"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/Trabajo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cuádriceps"
+                android:paddingLeft="15dp"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
         </LinearLayout>

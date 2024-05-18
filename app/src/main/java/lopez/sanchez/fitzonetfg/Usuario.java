@@ -1,6 +1,8 @@
 package lopez.sanchez.fitzonetfg;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario  {
     private String nombre;
     private String apellidos;
     private String dni;
@@ -9,6 +11,13 @@ public class Usuario {
     private String sexo;
     private String tipo;
 
+    //constructor vacio:
+    public Usuario(){
+
+    }
+    public Usuario(String nombre){
+        this.nombre=nombre;
+    }
     // Constructor
     public Usuario(String nombre, String apellidos, String dni, String correo, String contraseña, String sexo, String tipo) {
         this.nombre = nombre;
