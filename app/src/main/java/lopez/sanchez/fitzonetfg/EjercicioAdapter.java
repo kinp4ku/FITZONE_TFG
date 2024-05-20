@@ -78,7 +78,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
             // Puedes ajustar esta lógica según el formato de tus URLs de imagen
             String[] parts = imageUrl.split("/");
             String filename = parts[parts.length - 1]; // Última parte de la URL
-            return filename.replace(".jpg", ""); // Eliminar la extensión
+            return filename; // Eliminar la extensión
         }
         return null;
     }
