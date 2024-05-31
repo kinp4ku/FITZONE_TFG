@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gris">#808080</color> <!-- Gris -->
+    <color name="gris_claro">#D3D3D3</color> <!-- Gris claro -->
 </resources>

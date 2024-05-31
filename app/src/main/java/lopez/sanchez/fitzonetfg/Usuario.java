@@ -3,25 +3,43 @@ package lopez.sanchez.fitzonetfg;
 import java.io.Serializable;
 
 public class Usuario  {
-    private String nombre;
-    private String apellidos;
+    private String NOMBRE;
+    private String APELLIDOS;
     private String dni;
     private String correo;
     private String contraseña;
     private String sexo;
     private String tipo;
+    private String imgUrl;
+    private String id;
+    private String nombre;
+
+    public Usuario(String NOMBRE, String APELLIDOS, String imgUrl) {
+        this.NOMBRE = NOMBRE;
+        this.APELLIDOS = APELLIDOS;
+        this.imgUrl = imgUrl;
+    }
+
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     //constructor vacio:
     public Usuario(){
 
     }
-    public Usuario(String nombre){
-        this.nombre=nombre;
+    public Usuario(String NOMBRE){
+        this.NOMBRE=NOMBRE;
     }
     // Constructor
-    public Usuario(String nombre, String apellidos, String dni, String correo, String contraseña, String sexo, String tipo) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
+    public Usuario(String NOMBRE, String APELLIDOS, String dni, String correo, String contraseña, String sexo, String tipo) {
+        this.NOMBRE = NOMBRE;
+        this.APELLIDOS = APELLIDOS;
         this.dni = dni;
         this.correo = correo;
         this.contraseña = contraseña;
@@ -31,19 +49,19 @@ public class Usuario  {
 
     // Getters y setters (puedes generarlos automáticamente en Android Studio)
     public String getNombre() {
-        return nombre;
+        return NOMBRE;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombre(String NOMBRE) {
+        this.NOMBRE = NOMBRE;
     }
 
     public String getApellidos() {
-        return apellidos;
+        return APELLIDOS;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setApellidos(String APELLIDOS) {
+        this.APELLIDOS = APELLIDOS;
     }
 
     public String getDni() {
@@ -64,6 +82,13 @@ public class Usuario  {
 
     public String getContraseña() {
         return contraseña;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setContraseña(String contraseña) {
@@ -86,3 +111,4 @@ public class Usuario  {
         this.tipo = tipo;
     }
 }
+

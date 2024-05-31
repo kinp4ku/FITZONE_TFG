@@ -1,8 +1,7 @@
 package lopez.sanchez.fitzonetfg;
 
+
 import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.Glide;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -42,9 +39,7 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     public void onBindViewHolder(@NonNull EjercicioViewHolder holder, int position) {
         Ejercicio ejercicio = ejercicioArrayList.get(position);
 
-        holder.nombreE.setText(ejercicio.getNombreEjercicio());
-        holder.trabajoE.setText(ejercicio.getTrabajoEjercicio());
-        holder.repeticionesE.setText(ejercicio.getRepeticionesEjercicio());
+        holder.nombreEjercicio.setText(ejercicio.getNombreEjercicio());
 
         // Construir la ruta de la imagen en Firebase Storage
         String nombreImagen = obtenerNombreImagen(ejercicio.getUrl_img());
@@ -53,20 +48,13 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
             StorageReference storageRef = storage.getReference().child(rutaImagen);
 
             // Obtener la URI de la imagen para cargarla con Glide
-            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Cargar la imagen usando Glide
-                    Glide.with(context)
-                            .load(uri)
-                            .into(holder.img);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Manejar errores al obtener la URL de la imagen
-                    Log.e("EjercicioAdapter", "Error al obtener la URL de la imagen:", e);
-                }
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Cargar la imagen usando Glide
+                Glide.with(context)
+                        .load(uri)
+                        .into(holder.imagenEjercicio);
+            }).addOnFailureListener(e -> {
+                // Manejar errores al obtener la URL de la imagen
             });
         }
     }
@@ -74,11 +62,8 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
     // Método para obtener el nombre de la imagen de la URL
     private String obtenerNombreImagen(String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {
-            // Ejemplo de implementación para obtener el nombre de la imagen de la URL
-            // Puedes ajustar esta lógica según el formato de tus URLs de imagen
             String[] parts = imageUrl.split("/");
-            String filename = parts[parts.length - 1]; // Última parte de la URL
-            return filename.replace(".jpg", ""); // Eliminar la extensión
+            return parts[parts.length - 1]; // Última parte de la URL
         }
         return null;
     }
@@ -88,17 +73,19 @@ public class EjercicioAdapter extends RecyclerView.Adapter<EjercicioAdapter.Ejer
         return ejercicioArrayList.size();
     }
 
+    public void filtrarLista(ArrayList<Ejercicio> listaFiltrada) {
+        ejercicioArrayList = listaFiltrada;
+        notifyDataSetChanged();
+    }
+
     static class EjercicioViewHolder extends RecyclerView.ViewHolder {
-        TextView nombreE, trabajoE, repeticionesE;
-        ImageView img;
+        TextView nombreEjercicio;
+        ImageView imagenEjercicio;
 
         public EjercicioViewHolder(@NonNull View itemView) {
             super(itemView);
-            nombreE = itemView.findViewById(R.id.nombreEjercicio);
-            trabajoE = itemView.findViewById(R.id.Trabajo);
-            repeticionesE = itemView.findViewById(R.id.Repeticiones);
-            img = itemView.findViewById(R.id.iconImageView);
+            nombreEjercicio = itemView.findViewById(R.id.nombreEjercicio);
+            imagenEjercicio = itemView.findViewById(R.id.iconImageView);
         }
     }
 }
-

@@ -5,5 +5,12 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.FITZONETFG" parent="Base.Theme.FITZONETFG" />
+    <style name="Base.Theme.gris" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your gray theme here. -->
+        <item name="colorPrimary">@color/gris</item>
+
+    </style>
+
+    <style name="Theme.gris" parent="Base.Theme.gris" />
 </resources>
+

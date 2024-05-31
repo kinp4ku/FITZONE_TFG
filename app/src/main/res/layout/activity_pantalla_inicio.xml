@@ -21,6 +21,7 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavView"
+            style="@style/Theme.gris"
             android:layout_width="369dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

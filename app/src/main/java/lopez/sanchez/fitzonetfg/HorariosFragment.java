@@ -1,38 +1,65 @@
 package lopez.sanchez.fitzonetfg;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
-
 public class HorariosFragment extends Fragment {
+    private List<String> horariosSeleccionados = new ArrayList<>();
+    private ArrayList<Horario> horarioArrayList;
+    private HorarioAdapter horarioAdapter;
+    private FirebaseFirestore db;
+    private ProgressDialog progressDialog;
+
     List<listElement> elements;
     RecyclerView recyclerViewDays, recyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_horarios, container, false);
 
-        recyclerViewDays = view.findViewById(R.id.listaDias); // Asigna la vista correctamente
-        recyclerView = view.findViewById(R.id.list); // Asigna la vista del RecyclerView
+        recyclerViewDays = view.findViewById(R.id.listaDias);
+        recyclerView = view.findViewById(R.id.list);
 
-        dias(); // Llama a días después de asignar recyclerViewDays
-        init(); // Llama a init después de asignar recyclerView
+        dias();
+
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Fetching Data...");
+        progressDialog.show();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        horarioArrayList = new ArrayList<>();
+        horarioAdapter = new HorarioAdapter(requireContext(), horarioArrayList, new HashSet<String>());
+
+        recyclerView.setAdapter(horarioAdapter);
+
+        db = FirebaseFirestore.getInstance();
+
+        obtenerHorarioDesdeFirestore();
 
         return view;
     }
-    public void dias(){
-        recyclerViewDays = recyclerViewDays.findViewById(R.id.listaDias);
 
+    public void dias() {
         recyclerViewDays.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         List<Integer> daysOfMonth = generateDaysForCurrentMonth();
@@ -41,7 +68,6 @@ public class HorariosFragment extends Fragment {
         scrollToCurrentDay(daysOfMonth);
     }
 
-    //método para poder centrar el número del día en el que estamos.
     private void scrollToCurrentDay(List<Integer> daysOfMonth) {
         Calendar calendar = Calendar.getInstance();
         int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
@@ -62,6 +88,7 @@ public class HorariosFragment extends Fragment {
             });
         }
     }
+
     private List<Integer> generateDaysForCurrentMonth() {
         List<Integer> days = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
@@ -71,23 +98,44 @@ public class HorariosFragment extends Fragment {
         }
         return days;
     }
-    public void init() {
-        elements = new ArrayList<>();
-        elements.add(new listElement(R.drawable.zumba, "Zumba", "8:00", "8:45"));
-        elements.add(new listElement(R.drawable.zumba, "Yoga", "8:45", "9:30"));
-        elements.add(new listElement(R.drawable.zumba, "Ciclo Indoor", "10:00", "10:45"));
-        elements.add(new listElement(R.drawable.zumba, "Pilates", "11:15", "12:00"));
-        elements.add(new listElement(R.drawable.zumba, "Estiramientos", "13:00", "14:00"));
-        elements.add(new listElement(R.drawable.zumba, "Zumba", "17:00", "17:45"));
-        elements.add(new listElement(R.drawable.zumba, "Body Pump", "18:00", "18:45"));
-        elements.add(new listElement(R.drawable.zumba, "Body Combat", "19:00", "19:45"));
-        elements.add(new listElement(R.drawable.zumba, "CORE", "21:00", "21:45"));
 
-        ListAdapter listAdapter = new ListAdapter(elements, getContext());
+    private void obtenerHorarioDesdeFirestore() {
+        db.collection("Horarios")
+                .orderBy("horaInicio", Query.Direction.ASCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e("Firestore ERROR", "Error getting documents.", error);
+                        progressDialog.dismiss();
+                        return;
+                    }
 
-        recyclerView = recyclerView.findViewById(R.id.list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(listAdapter);
+                    for (DocumentChange dc : value.getDocumentChanges()) {
+                        if (dc.getType() == DocumentChange.Type.ADDED) {
+                            Horario horario = dc.getDocument().toObject(Horario.class);
+                            horario.setId(dc.getDocument().getId());
+                            horarioArrayList.add(horario);
+                            Log.d("Firestore DATA", "Horario añadido: " + horario.getNombreEjercicio());
+                        } else if (dc.getType() == DocumentChange.Type.MODIFIED) {
+                            Horario horario = dc.getDocument().toObject(Horario.class);
+                            horario.setId(dc.getDocument().getId());
+                            actualizarHorarioEnLista(horario);
+                            Log.d("Firestore DATA", "Horario modificado: " + horario.getNombreEjercicio());
+                        }
+                    }
+
+                    horarioAdapter.notifyDataSetChanged();
+                    Log.d("Firestore DATA", "Total horarios: " + horarioArrayList.size());
+
+                    progressDialog.dismiss();
+                });
+    }
+
+    private void actualizarHorarioEnLista(Horario horarioActualizado) {
+        for (int i = 0; i < horarioArrayList.size(); i++) {
+            if (horarioArrayList.get(i).getId().equals(horarioActualizado.getId())) {
+                horarioArrayList.set(i, horarioActualizado);
+                break;
+            }
+        }
     }
 }

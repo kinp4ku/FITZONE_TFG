@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AÑADIR RUTINA"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="16dp" />
+
+        <!-- Nombre Rutina -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre Rutina"
+            android:paddingBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextNombreRutina"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese el nombre de la rutina"
+            android:paddingBottom="16dp" />
+
+        <!-- Nombre Ejercicio -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre Ejercicio"
+            android:paddingBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/etAñadir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Ingrese el nombre del ejercicio" />
+
+            <Button
+                android:id="@+id/buttonAñadirEjercicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Añadir" />
+        </LinearLayout>
+
+        <!-- Lista de Ejercicios -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewEjercicios"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            android:scrollbars="vertical" />
+
+        <!-- Botones Cancelar y Añadir -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/buttonCancelar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:text="Cancelar" />
+
+            <Button
+                android:id="@+id/buttonAñadirRutina"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/holo_green_light"
+                android:text="Añadir" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

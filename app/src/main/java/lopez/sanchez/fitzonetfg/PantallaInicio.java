@@ -6,10 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -34,11 +32,11 @@ public class PantallaInicio extends AppCompatActivity {
                 if (item.getItemId() == R.id.horario) {
                     fragment = new HorariosFragment();
                 } else if (item.getItemId() == R.id.rutinas) {
-                    //fragment = new RutinasFragment();
-                } else if (item.getItemId() == R.id.ejercicios) {
+                    fragment = new RutinasFragment();
+                } else if (item.getItemId() == R.id.contacto) {
                     fragment = new EjerciciosFragment();
                 } else if (item.getItemId() == R.id.ajustes) {
-                   fragment = new AjustesFragment();
+                    fragment = new AjustesFragment();
                 }
 
                 if (fragment != null) {
@@ -58,15 +56,5 @@ public class PantallaInicio extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void HorarioPantalla(View v) {
-        // Código para abrir la otra actividad
-        Intent intent = new Intent(this, Horarios.class);
-        startActivity(intent);
-    }
 
-    public void AjustesPantalla(View v) {
-        // Código para abrir la otra actividad
-        Intent intent = new Intent(this, Ajustes.class);
-        startActivity(intent);
-    }
 }

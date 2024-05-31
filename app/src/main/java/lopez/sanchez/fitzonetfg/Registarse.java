@@ -1,5 +1,7 @@
 package lopez.sanchez.fitzonetfg;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +35,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,14 +45,29 @@ import com.google.android.gms.tasks.OnCompleteListener;
 public class Registarse extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView imageView;
-    private EditText nombre, apellidos, dni, correo, contraseña;
+    private ImageView imageView, imagenVer;
+    private EditText nombre, apellidos, dni, correo, contraseña, telefono, domicilio;
     private RadioButton sexoM, sexoF, tipoU, tipoT;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseFirestore mfirestore;
     private Button google, registrarse;
     private int RC_SIGN_IN = 20;
+    private String mensajeError="";
+    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri selectedImageUri = result.getData().getData();
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                        imageView.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +85,18 @@ public class Registarse extends AppCompatActivity {
 
         initializeViews();
         setClickListeners();
+
+
     }
 
     private void initializeViews() {
         imageView = findViewById(R.id.img_camara);
+        imagenVer = findViewById(R.id.imgVer);
         nombre = findViewById(R.id.txt_nombre);
         apellidos = findViewById(R.id.txt_apellidos);
         dni = findViewById(R.id.txt_dni);
         correo = findViewById(R.id.txt_correo);
+        telefono = findViewById(R.id.editTextPhone);
         contraseña = findViewById(R.id.txt_contraseñaUsu);
         sexoM = findViewById(R.id.rb_hombre);
         sexoF = findViewById(R.id.rb_mujer);
@@ -80,18 +106,125 @@ public class Registarse extends AppCompatActivity {
         registrarse = findViewById(R.id.b_registrarse);
     }
 
+    public boolean reglasContraseña(String pass) {
+
+        boolean cumple = true;
+        int contadorMayus=0, contadorMinus=0, contadorNum=0, contadorSimbolo=0;
+        char[] caracteres = pass.toCharArray();
+
+        //Longitud mínima.
+        if (!(caracteres.length >= 8)) {
+            cumple = false;
+        }
+
+        for (char caracter : caracteres) {
+            //Al menos un símbolo
+            if (!(Character.isDigit(caracter) || Character.isLetter(caracter))) {
+                contadorSimbolo++;
+            }
+
+            //Al menos un número
+            if (Character.isDigit(caracter)) {
+                contadorNum++;
+            }
+
+            //Al menos una mayúscula
+            if (Character.isUpperCase(caracter)) {
+                contadorMayus++;
+            }
+
+            //Al menos una minúscula
+            if (Character.isLowerCase(caracter)) {
+                contadorMinus++;
+            }
+        }
+
+        if(contadorMayus==0 || contadorMinus==0 || contadorNum==0 || contadorSimbolo==0){
+            cumple = false;
+        }
+
+        return cumple;
+    }
+
+    private boolean validarDNI(String dni)
+    {
+        if(dni.length() != 9) //Si el DNI tiene algo distinto a 9 caracteres no es valido
+        {
+            return false;
+        }
+        else if(!Character.isLetter(dni.substring(8).charAt(0))) // Si el último caracter no es una letra no es valido
+        {
+            return false;
+        }
+        else if(!dni.substring(0,8).matches("-?\\d+(\\.\\d+)?")) //Si algun caracter dentro de los numeros no es un numero no es valido
+        {
+            return false;
+        }
+        String letra = dni.substring(8).toUpperCase();
+        String letrasValidas = "TRWAGMYFPDXBNJZSQVHLCKE";
+
+        String numeros = dni.substring(0, 8);
+        int numerosInt = Integer.parseInt(numeros);
+        int resto = numerosInt % 23;
+        String letraCorrecta = letrasValidas.substring(resto, resto+1);
+
+        return letraCorrecta.equals(letra);
+    }
+
+    private String hashContra(String contra){
+        StringBuilder hexHash = null;
+        try {
+            // Obtén una instancia del algoritmo SHA-256
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            // Convierte la contraseña a bytes
+            byte[] passwordBytes = contra.getBytes(StandardCharsets.UTF_8);
+
+            // Calcula el hash
+            byte[] hashBytes = digest.digest(passwordBytes);
+
+            // Convierte el hash a una representación hexadecimal
+            hexHash = new StringBuilder();
+            for (byte b : hashBytes) {
+                hexHash.append(String.format("%02x", b));
+            }
+
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return hexHash.toString();
+    }
+
     private void setClickListeners() {
         imageView.setOnClickListener(v -> openGallery());
+        imagenVer.setOnClickListener(new View.OnClickListener() {
+            boolean passwordVisible = false;
 
+            @Override
+            public void onClick(View v) {
+                if (passwordVisible) {
+                    // Ocultar contraseña
+                    contraseña.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    passwordVisible = false;
+                    imagenVer.setImageResource(R.drawable.ojo); // Cambiar icono a ojo abierto
+                } else {
+                    // Mostrar contraseña
+                    contraseña.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    passwordVisible = true;
+                    imagenVer.setImageResource(R.drawable.baseline_remove_red_eye_24); // Cambiar icono a ojo cerrado
+                }
+            }
+        });
         google.setOnClickListener(v -> googleSignIn());
 
-     //   registrarse.setOnClickListener(v -> guardarDatos());
+        //   registrarse.setOnClickListener(v -> guardarDatos());
     }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), PICK_IMAGE_REQUEST);
+        imagePickerLauncher.launch(Intent.createChooser(intent, "Selecciona una imagen"));
     }
 
     private void googleSignIn() {
@@ -104,23 +237,36 @@ public class Registarse extends AppCompatActivity {
         String apellidosUsuario = apellidos.getText().toString().trim();
         String dniUsuario = dni.getText().toString().trim();
         String emailUsuario = correo.getText().toString().trim();
-        String contraseñaUsuario = contraseña.getText().toString().trim();
+        String telefonoUsuario = telefono.getText().toString().trim();
+        String hash;
+        String contraseñaUsuario = contraseña.getText().toString();
         String sexoUsuario = sexo();
         String tipoUsuario = tipo();
 
-        if (nombreUsuario.isEmpty() || emailUsuario.isEmpty() || contraseñaUsuario.isEmpty() || sexoUsuario.isEmpty() || tipoUsuario.isEmpty()) {
-            Toast.makeText(this, "Rellenar los campos", Toast.LENGTH_SHORT).show();
-        } else {
-            postUsuario(nombreUsuario, apellidosUsuario, dniUsuario, emailUsuario, contraseñaUsuario, sexoUsuario, tipoUsuario);
+
+        if(!validarDNI(dniUsuario))
+        {
+            mensajeError="DNI no válido";
+        }
+        else if (!reglasContraseña(contraseñaUsuario)) {
+            mensajeError="Contraseña inválida.\nIntroduzca al menos una mayúscula, una minúscula, un número y un símbolo. \nLongitud mínima de 8 caracteres";
+        }
+        else if (nombreUsuario.isEmpty() || emailUsuario.isEmpty() || contraseñaUsuario.isEmpty() || sexoUsuario.isEmpty() || tipoUsuario.isEmpty()) {
+            mensajeError="Rellenar los campos";
+        }
+        else {
+            hash = hashContra(contraseñaUsuario);
+            postUsuario(nombreUsuario, apellidosUsuario, dniUsuario, emailUsuario, telefonoUsuario, hash, sexoUsuario, tipoUsuario);
         }
     }
 
-    private void postUsuario(String nombreUsuario, String apellidosUsuario, String dniUsuario, String emailUsuario, String contraseñaUsuario, String sexoUsuario, String tipoUsuario) {
+    private void postUsuario(String nombreUsuario, String apellidosUsuario, String dniUsuario, String emailUsuario, String telefonoUsuario, String contraseñaUsuario, String sexoUsuario, String tipoUsuario) {
         Map<String, Object> map = new HashMap<>();
         map.put("NOMBRE", nombreUsuario);
         map.put("APELLIDOS", apellidosUsuario);
         map.put("DNI", dniUsuario);
         map.put("EMAIL", emailUsuario);
+        map.put("TELEFONO", telefonoUsuario);
         map.put("CONTRASEÑA", contraseñaUsuario);
         map.put("SEXO", sexoUsuario);
         map.put("TIPO", tipoUsuario);
@@ -206,14 +352,17 @@ public class Registarse extends AppCompatActivity {
     public void setSign(View v) {
         guardarDatos();
         if (!correo.getText().toString().isEmpty() && !contraseña.getText().toString().isEmpty()) {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), contraseña.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(correo.getText().toString(), hashContra(contraseña.getText().toString())).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         pantallaInicio();
                     } else {
-                        showAlert();
+                        if(mensajeError.equals("")){
+                            mensajeError="Error de registro.";
+                        }
+                        showAlert(mensajeError);
                     }
                 }
             });
@@ -221,14 +370,13 @@ public class Registarse extends AppCompatActivity {
 
     }
 
-    public void showAlert() {
+    public void showAlert(String mns) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error");
-        builder.setMessage("Error de autentificación.");
+        builder.setMessage(mns);
         builder.setPositiveButton("Aceptar", null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
 }
-

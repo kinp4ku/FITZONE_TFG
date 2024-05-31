@@ -10,7 +10,10 @@ public class Ejercicio {
     public Ejercicio() {
         // Constructor vacío requerido para Firestore
     }
-
+    public Ejercicio(String nombreEjercicio) {
+        // Constructor vacío requerido para Firestore
+        this.nombreEjercicio = nombreEjercicio;
+    }
     public Ejercicio(String nombreEjercicio, String trabajoEjercicio, String repeticionesEjercicio, String url_img) {
         this.nombreEjercicio = nombreEjercicio;
         this.trabajoEjercicio = trabajoEjercicio;

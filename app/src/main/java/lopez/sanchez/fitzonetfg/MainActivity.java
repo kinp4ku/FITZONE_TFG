@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     }
     public void nueva (View v){
         // Código para abrir la otra actividad
-        Intent intent = new Intent(this, InicioApp.class);
+      //  Intent intent = new Intent(this,  Tecnico.class);
+     Intent intent = new Intent(this,  InicioApp.class);
         startActivity(intent);
     }
 

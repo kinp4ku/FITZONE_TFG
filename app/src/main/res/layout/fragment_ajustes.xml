@@ -113,6 +113,7 @@
                     android:src="@android:drawable/ic_menu_edit" />
 
                 <TextView
+                    android:id="@+id/tvDatosUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -124,6 +125,7 @@
 
             <!-- Botón 4: Desconectarse -->
             <LinearLayout
+                android:id="@+id/layoutDesconectarse"
                 android:layout_width="match_parent"
                 android:layout_height="86dp"
                 android:gravity="center_vertical"
@@ -137,6 +139,7 @@
                     android:src="@drawable/baseline_exit_to_app_24" />
 
                 <TextView
+                    android:id="@+id/desconectarTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
