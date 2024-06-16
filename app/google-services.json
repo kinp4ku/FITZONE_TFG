@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "200466812160",
+    "project_id": "fitzone-d49aa",
+    "storage_bucket": "fitzone-d49aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200466812160:android:280682f08b9b0b2b33f7e5",
+        "android_client_info": {
+          "package_name": "lopez.sanchez.fitzonetfg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkBXCzc9cd4-r1LB0HXjrpgyf7WW9Pvnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
