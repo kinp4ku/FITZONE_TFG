@@ -1,6 +1,6 @@
-![fitzone_logo](https://github.com/kinp4ku/FITZONE_TFG/assets/124914959/a46a5e9b-0996-4c34-921b-9705a6bbc124)# FitZone - Aplicación de Gestión de Gimnasios
+# FitZone - Aplicación de Gestión de Gimnasios
 
-![Logo de FitZone](ruta/al/logo.png)
+![fitzone_logo](https://github.com/kinp4ku/FITZONE_TFG/assets/124914959/a46a5e9b-0996-4c34-921b-9705a6bbc124)
 
 ## Tabla de Contenidos
 - [Resumen](#resumen)
