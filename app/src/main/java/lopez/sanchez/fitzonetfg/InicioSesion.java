@@ -156,8 +156,6 @@ public class InicioSesion extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
         IntentFilter ndefFilter = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         try {
             ndefFilter.addDataType("text/plain");
